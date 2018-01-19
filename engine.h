@@ -1,9 +1,11 @@
-#ifndef ENGINE_H_
-#define ENGINE_H_
+#ifndef DEPENG_ENGINE_H_
+#define DEPENG_ENGINE_H_
 
+#include <functional>
+#include <memory>
 #include <vector>
 
-namespace resengine {
+namespace depeng {
 
 struct Resource;
 struct Operation;
@@ -36,9 +38,22 @@ public:
   virtual void PushSyncTask(OptHandler opt) = 0;
 
   // Number of tasks in the engine.
-  virtual size_t num_tasks() const = 0;
+  virtual size_t num_oprs() const = 0;
 };
 
-} // namespace resengine
+// An engine without concurrency support, any new application can take this as
+// the first step to test.
+class NaiveEngine : public Engine {
+public:
+  virtual void PushAsyncTask(OptHandler opt, std::vector<ResHandler> read_res,
+                             std::vector<ResHandler> write_res,
+                             const OptCallbackP &callback) override {}
 
-#endif // ENGINE_H_
+  virtual void PushSyncTask(OptHandler opt) override;
+
+  virtual size_t num_oprs() const override { return 0; };
+};
+
+} // namespace depeng
+
+#endif // DEPENG_ENGINE_H_
