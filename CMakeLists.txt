@@ -11,17 +11,21 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-fPIC")
 
-
+################################ Configurations #######################################
 set(THIRD_PARTY_PATH "${CMAKE_BINARY_DIR}/third_party" CACHE STRING
         "A path setting third party libraries download & build directories.")
 
-################################ Configurations #######################################
-
+include(external/zlib)      # download, build, install zlib
 include(external/gflags)
 include(external/glog)
-include(external/gtest)
+include(external/gtest)     # download, build, install gtest
+include(external/eigen)     # download, build, install gtest
+
 
 include_directories(${PROJECT_SOURCE_DIR})
 
 add_library(engine ${PROJECT_SOURCE_DIR}/engine.cc)
 add_dependencies(engine glog)
+
+# add_executable(engine_test ${PROJECT_SOURCE_DIR}/engine_test.cc)
+# target_link_libraries(engine_test engine glog)
